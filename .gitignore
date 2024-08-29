@@ -1,5 +1,9 @@
 # OSX
 #
+
+google-services.json
+AndroidManifest.xml
+
 .DS_Store
 
 # Xcode
