@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Card, Text, Image, useTheme} from '@rneui/themed';
-import OutlineButton from '../../componentes/OutlineButton';
+import OutlineButton from '../../components/OutlineButton';
 
 export default ({item, onPress}) => {
   const {theme} = useTheme();
@@ -10,12 +10,14 @@ export default ({item, onPress}) => {
     card: {
       alignContent: 'center',
       alignItems: 'center',
-      borderRadius: 10,
-      borderColor: theme.colors.primaryDark,
-      backgroundColor: theme.colors.background,
+      borderRadius: 1,
+      borderColor:
+        theme.mode === 'light' ? theme.colors.black : theme.colors.primaryDark,
+      backgroundColor: '#fff3e8',
     },
     title: {
-      color: theme.colors.primaryDark,
+      color:
+        theme.mode === 'light' ? theme.colors.black : theme.colors.primaryDark,
     },
     divider: {
       width: 260,
@@ -24,15 +26,16 @@ export default ({item, onPress}) => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    capa: {
+    foto: {
       width: 50,
       height: 50,
       marginRight: 20,
-      borderRadius: 50 / 2,
+      borderRadius: 1 / 2,
     },
     nome: {
       textAlign: 'center',
-      color: theme.colors.primaryDark,
+      color:
+        theme.mode === 'light' ? theme.colors.black : theme.colors.primaryDark,
       fontSize: 18,
       fontWeight: 'bold',
     },
@@ -40,11 +43,11 @@ export default ({item, onPress}) => {
 
   return (
     <Card containerStyle={styles.card}>
-      <Card.Title style={styles.title}>{item.nome}</Card.Title>
-      <Card.Divider color={theme.colors.primary} style={styles.divider} />
+      <Card.Title style={styles.title}>{item.curso}</Card.Title>
+      <Card.Divider color={theme.colors.black} style={styles.divider} />
       <View style={styles.div_quadrinho}>
-        <Image containerStyle={styles.capa} source={{uri: item.urlFoto}} />
-        <Text style={styles.preco}>{item.preco}</Text>
+        <Image containerStyle={styles.foto} source={{uri: item.urlFoto}} />
+        <Text style={styles.nome}>{item.nome}</Text>
       </View>
       <OutlineButton texto={'Detalhar'} onClick={onPress} />
     </Card>

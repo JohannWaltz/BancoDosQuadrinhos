@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useContext} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
@@ -20,6 +21,7 @@ export default ({route, navigation}) => {
       ...StyleSheet.absoluteFillObject,
     },
   });
+  //TODO: repensar a feature "obter as coordenadas no map"
   return (
     <View style={styles.container}>
       <MapView
@@ -55,7 +57,7 @@ export default ({route, navigation}) => {
                   onPress: () => {
                     let resenha = {
                       nome: route.params.resenha.nome,
-                      descricao: route.params.resenha.descricao,
+                      texto: route.params.resenha.texto,
                       latitude: route.params.resenha.latitude,
                       longitude: route.params.resenha.longitude,
                     };
@@ -87,7 +89,7 @@ export default ({route, navigation}) => {
                 longitude: Number(resenha.longitude),
               }}
               title={resenha.nome}
-              description={resenha.descricao}
+              description={resenha.texto}
               draggable>
               <Icon
                 type="ionicon"

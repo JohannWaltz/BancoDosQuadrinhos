@@ -1,15 +1,18 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {StatusBar} from 'react-native';
 import SignIn from '../screens/SignIn';
-import SignUp from '../screens/SignUp';
-import Preload from '../screens/Preload';
-import ForgotPassWord from '../screens/ForgotPassWord';
 import Quadrinhos from '../screens/Quadrinhos';
+import Preload from '../screens/Preload';
+import SignUp from '../screens/SignUp';
 import Quadrinho from '../screens/Quadrinho';
-import Resenha from '../screens/Resenha';
 import Resenhas from '../screens/Resenhas';
+import Resenha from '../screens/Resenha';
+import Autores from '../screens/Autores';
+import ForgotPassWord from '../screens/ForgotPassword';
 import ResenhasMap from '../screens/ResenhasMap';
 import Menu from '../screens/Menu';
 import PerfilUsuario from '../screens/PerfilUsuario';
@@ -48,7 +51,11 @@ const AppStack = () => {
             <Icon
               type="ionicon"
               name="book"
-              color={theme.colors.primary}
+              color={
+                theme.mode === 'light'
+                  ? theme.colors.black
+                  : theme.colors.primary
+              }
               size={20}
             />
           ),
@@ -63,7 +70,11 @@ const AppStack = () => {
             <Icon
               type="ionicon"
               name="people"
-              color={theme.colors.primary}
+              color={
+                theme.mode === 'light'
+                  ? theme.colors.black
+                  : theme.colors.blackprimary
+              }
               size={20}
             />
           ),
@@ -78,7 +89,30 @@ const AppStack = () => {
             <Icon
               type="ionicon"
               name="map-sharp"
-              color={theme.colors.primary}
+              color={
+                theme.mode === 'light'
+                  ? theme.colors.black
+                  : theme.colors.black
+              }
+              size={20}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={Autores}
+        name="Autores"
+        options={{
+          tabBarLabel: 'Autores',
+          tabBarIcon: () => (
+            <Icon
+              type="ionicon"
+              name="rocket"
+              color={
+                theme.mode === 'light'
+                  ? theme.colors.black
+                  : theme.colors.black
+              }
               size={20}
             />
           ),
@@ -93,7 +127,11 @@ const AppStack = () => {
             <Icon
               type="ionicon"
               name="list"
-              color={theme.colors.primary}
+              color={
+                theme.mode === 'light'
+                  ? theme.colors.black
+                  : theme.colors.black
+              }
               size={20}
             />
           ),
@@ -115,6 +153,7 @@ const Navigator = () => {
         },
         dark: theme.mode === 'light',
       }}>
+      <StatusBar backgroundColor={theme.colors.black} />
       <Stack.Navigator
         initialRouteName="AuthStack"
         screenOptions={{
@@ -147,5 +186,4 @@ const Navigator = () => {
     </NavigationContainer>
   );
 };
-
 export default Navigator;

@@ -1,26 +1,35 @@
 import React from 'react';
-import {AuthenticationProvider} from '../context/AuthUserProvider';
+import {AuthUserProvider} from '../context/AuthUserProvider';
+import { QuadrinhoProvider } from '../context/QuadrinhoProvider';
+import Navigator from './Navigator';
 import {ApiProvider} from '../context/ApiProvider';
 import {ResenhaProvider} from '../context/ResenhaProvider';
-import Navigator from './Navigator';
 import {UserProvider} from '../context/UserProvider';
-import {QuadrinhoProvider} from '../context/QuadrinhoProvider';
+import {NotificationsProvider} from '../context/NotificationsProvider';
 import {ThemeProvider, createTheme} from '@rneui/themed';
 import {COLORS} from '../assets/colors';
+
 
 const theme = createTheme({
   lightColors: {
     primary: COLORS.primary,
-    primaryDark: COLORS.primaryDark,
+    primaryDark: COLORS.primaryDark, //esta cor extende a paleta do rneui
     secondary: COLORS.accent,
-    accentSecundary: COLORS.accentSecundary,
+    accentSecundary: COLORS.accentSecundary, //esta cor extende a paleta do rneui
     background: COLORS.white,
-    error: COLORS.errror,
-    transparent: COLORS.transparent,
+    white: COLORS.white,
+    error: COLORS.error,
+    transparent: COLORS.transparent, //esta cor extende a paleta do rneui
   },
   darkColors: {
-    primary: COLORS.primary,
+    primary: COLORS.white,
+    primaryDark: COLORS.black, //esta cor extende a paleta do rneui
     secondary: COLORS.accent,
+    accentSecundary: COLORS.accentSecundary, //esta cor extende a paleta do rneui
+    background: COLORS.black,
+    error: COLORS.error,
+    loading: COLORS.primaryDark,
+    transparent: COLORS.transparent, //esta cor extende a paleta do rneui
   },
   mode: 'light',
   components: {
@@ -67,7 +76,7 @@ const theme = createTheme({
     },
     Input: {
       inputContainerStyle: {
-        borderBottomColor: COLORS.primary,
+        borderBottomColor: COLORS.grey,
       },
     },
   },
@@ -76,17 +85,19 @@ const theme = createTheme({
 export default function Providers() {
   return (
     <ThemeProvider theme={theme}>
-      <AuthenticationProvider>
-        <ApiProvider>
-          <UserProvider>
-            <QuadrinhoProvider>
-              <ResenhaProvider>
-                <Navigator />
-              </ResenhaProvider>
-            </QuadrinhoProvider>
-          </UserProvider>
-        </ApiProvider>
-      </AuthenticationProvider>
+      <AuthUserProvider>
+        <NotificationsProvider>
+          <ApiProvider>
+            <UserProvider>
+              <QuadrinhoProvider>
+                <ResenhaProvider>
+                  <Navigator />
+                </ResenhaProvider>
+              </QuadrinhoProvider>
+            </UserProvider>
+          </ApiProvider>
+        </NotificationsProvider>
+      </AuthUserProvider>
     </ThemeProvider>
   );
 }

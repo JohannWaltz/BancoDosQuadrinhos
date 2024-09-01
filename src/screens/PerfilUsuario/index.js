@@ -1,14 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, ToastAndroid} from 'react-native';
 import styled from 'styled-components/native';
-import MyButtom from '../../componentes/MeuButtom';
-import DeleteButton from '../../componentes/OutlineButton';
-import Loading from '../../componentes/Loading';
-import {AuthenticationContext} from '../../context/AuthUserProvider';
+import MyButtom from '../../components/MyButtom';
+import DeleteButton from '../../components/OutlineButton';
+import Loading from '../../components/Loading';
+import {AuthUserContext} from '../../context/AuthUserProvider';
 import {UserContext} from '../../context/UserProvider';
 import {CommonActions} from '@react-navigation/native';
 import {useTheme, Image, ButtonGroup, Input, Icon} from '@rneui/themed';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {COLORS} from '../../assets/colors';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -16,12 +17,15 @@ const Container = styled.SafeAreaView`
   align-items: center;
   padding: 5px;
   padding-top: 20px;
+  background-color: ${COLORS.secundary};
 `;
 
-const Scroll = styled.ScrollView``;
+const Scroll = styled.ScrollView`
+  background-color: ${COLORS.secundary};
+`;
 
 export default ({navigation}) => {
-  const {user} = useContext(AuthenticationContext);
+  const {user} = useContext(AuthUserContext);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [oldPass, setOldPass] = useState('');
@@ -35,48 +39,48 @@ export default ({navigation}) => {
 
   useEffect(() => {
     if (user) {
-      setLoading(false);
       setNome(user.nome);
       setEmail(user.email);
     }
   }, [user]);
 
   function salvar() {
-    Alert.alert(
-      'Opa!',
-      'Você tem certeza que deseja alterar estes dados?',
-      [
-        {
-          text: 'Não',
-          onPress: () => {},
-          style: 'cancel',
-        },
-        {
-          text: 'Sim',
-          onPress: async () => {
-            setLoading(true);
-            /*
+    if (oldPass === '' && newPass === '' && newPassConfirm === '') {
+      Alert.alert(
+        'Fique Esperto!',
+        'Você tem certeza que deseja alterar estes dados?',
+        [
+          {
+            text: 'Não',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: 'Sim',
+            onPress: async () => {
+              setLoading(true);
+              /*
                 Para evitar que dados sensíveis sejam enviados para
                 o Firestore, um novo objeto é criado.
               */
-            let localUser = {};
-            localUser.uid = user.uid;
-            localUser.nome = nome;
-            if (await save(localUser, urlDevice)) {
-              ToastAndroid.show(
-                'Você salvou os dados com sucesso.',
-                ToastAndroid.LONG,
-              );
-            } else {
-              ToastAndroid.show('Ops! Erro ao salvar.', ToastAndroid.LONG);
-              ('');
-            }
-            setLoading(false);
-            navigation.goBack();
+              let localUser = {};
+              localUser.uid = user.uid;
+              localUser.nome = nome;
+              if (await save(localUser, urlDevice)) {
+                ToastAndroid.show(
+                  'Show! Você salvou os dados com sucesso.',
+                  ToastAndroid.LONG,
+                );
+              } else {
+                ToastAndroid.show('Ops! Erro ao salvar.', ToastAndroid.LONG);
+              }
+              setLoading(false);
+              navigation.goBack();
+            },
           },
-        },
-      ],
-    );
+        ],
+      );
+    }
   }
 
   function excluir() {
@@ -146,7 +150,7 @@ export default ({navigation}) => {
             onPress: async () => {
               if (await updatePassword(newPass)) {
                 ToastAndroid.show(
-                  'Você alterou sua senha com sucesso.',
+                  'Show! Você alterou sua senha com sucesso.',
                   ToastAndroid.LONG,
                 );
                 navigation.goBack();
@@ -242,10 +246,23 @@ export default ({navigation}) => {
                 }
           }
           PlaceholderContent={<Loading />}
-        /> 
+        />
         <ButtonGroup
           buttons={['Buscar na Galeria', 'Tira Foto']}
           onPress={v => buscarImagemNoDevice(v)}
+          containerStyle={{
+            borderColor:
+              theme.mode === 'light'
+                ? theme.colors.black
+                : theme.colors.primary,
+            backgroundColor: theme.colors.white,
+          }}
+          textStyle={{
+            color:
+              theme.mode === 'light'
+                ? theme.colors.black
+                : theme.colors.primary,
+          }}
         />
         <Input
           value={nome}
@@ -270,8 +287,8 @@ export default ({navigation}) => {
           returnKeyType="next"
           leftIcon={
             <Icon
-              type="ionicon"
-              name="mail-outline"
+              type="material-community"
+              name="email-check-outline"
               size={22}
               color={theme.colors.grey2}
             />
@@ -286,16 +303,16 @@ export default ({navigation}) => {
           leftIcon={
             showPass ? (
               <Icon
-                type="ionicon"
-                name="lock-open-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.grey2}
                 onPress={() => setShowPass(false)}
               />
             ) : (
               <Icon
-                type="ionicon"
-                name="lock-open-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.error}
                 onPress={() => setShowPass(true)}
@@ -313,16 +330,16 @@ export default ({navigation}) => {
           leftIcon={
             showPass ? (
               <Icon
-                type="ionicon"
-                name="lock-closed-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.grey2}
                 onPress={() => setShowPass(false)}
               />
             ) : (
               <Icon
-                type="ionicon"
-                name="lock-closed-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.error}
                 onPress={() => setShowPass(true)}
@@ -340,16 +357,16 @@ export default ({navigation}) => {
           leftIcon={
             showPass ? (
               <Icon
-                type="ionicon"
-                name="lock-closed-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.grey2}
                 onPress={() => setShowPass(false)}
               />
             ) : (
               <Icon
-                type="ionicon"
-                name="lock-closed-outline"
+                type="material-community"
+                name="form-textbox-password"
                 size={22}
                 color={theme.colors.error}
                 onPress={() => setShowPass(true)}
@@ -358,10 +375,10 @@ export default ({navigation}) => {
           }
           onChangeText={t => setNePassConfirm(t)}
         />
-        <MyButtom texto="Salvar" aoClicar={salvar} />
+        <MyButtom text="Salvar" onClick={salvar} />
         <DeleteButton texto="Excluir Conta" onClick={excluir} />
         <DeleteButton texto="Alterar Senha" onClick={alterarSenha} />
-        {/* <Loading visivel={loading} /> */}
+        <Loading visivel={loading} />
       </Container>
     </Scroll>
   );

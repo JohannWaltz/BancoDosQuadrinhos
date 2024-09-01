@@ -1,17 +1,27 @@
 import React, {useContext, useState} from 'react';
-import {View, StyleSheet, TextInput, Alert} from 'react-native';
-import {COLORS} from '../../assets/colors';
-import MeuButtom from '../../componentes/MeuButtom';
-import {AuthenticationContext} from '../../context/AuthUserProvider';
+import {Alert} from 'react-native';
+import MyButtom from '../../components/MyButtom';
+import {AuthUserContext} from '../../context/AuthUserProvider';
+import styled from 'styled-components/native';
+import {useTheme, Input, Icon} from '@rneui/themed';
 
-const ForgotPassWord = ({navigation}) => {
+export const Body = styled.SafeAreaView`
+  flex: 1;
+  align-items: center;
+  /* margin: 10px; */
+  margin-top: 10px;
+  background-color: #fff3e8;
+`;
+
+export default ({navigation}) => {
   const [email, setEmail] = useState('');
-  const {forgotPassWord} = useContext(AuthenticationContext);
+  const {forgotPass} = useContext(AuthUserContext);
+  const {theme} = useTheme();
 
   const recover = async () => {
     let msgError = '';
     if (email !== '') {
-      msgError = await forgotPassWord(email);
+      msgError = await forgotPass(email);
       if (msgError === 'ok') {
         Alert.alert(
           'Atenção',
@@ -28,35 +38,23 @@ const ForgotPassWord = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
+    <Body>
+      <Input
         placeholder="Email"
         keyboardType="email-address"
         returnKeyType="go"
+        leftIcon={
+          <Icon
+            name="email-check-outline"
+            type="material-community"
+            size={22}
+            color={theme.colors.grey2}
+          />
+        }
         onChangeText={t => setEmail(t)}
         autoFocus={true}
       />
-      <MeuButtom texto="Recuperar" aoClicar={recover} />
-    </View>
+      <MyButtom text="Recuperar Senha" onClick={recover} />
+    </Body>
   );
 };
-export default ForgotPassWord;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  input: {
-    width: '95%',
-    height: 50,
-    borderBottomColor: COLORS.black,
-    borderBottomWidth: 2,
-    fontSize: 16,
-    paddingLeft: 2,
-    paddingBottom: 1,
-    marginTop: 40,
-    color: COLORS.black,
-  },
-});

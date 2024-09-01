@@ -2,18 +2,22 @@ import React, {useContext, useState} from 'react';
 import {CommonActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import Item from './Item';
-import FloatButtonAdd from '../../componentes/FloatButtonAdd';
+import FloatButtonAdd from '../../components/FloatButtonAdd';
 import {ResenhaContext} from '../../context/ResenhaProvider';
-import SearchBar from '../../componentes/SearchBar';
+import SearchBar from '../../components/SearchBar';
+import {COLORS} from '../../assets/colors';
+
 
 const Container = styled.SafeAreaView`
   flex: 1;
   padding: 5px;
+  background-color: ${COLORS.secundary};
 `;
 
 const FlatList = styled.FlatList`
   width: 100%;
   height: 100%;
+  background-color: ${COLORS.secundary};
 `;
 
 export default ({navigation}) => {
@@ -23,6 +27,11 @@ export default ({navigation}) => {
   const filterByName = text => {
     if (text !== '') {
       let a = [];
+      // estudantes.forEach(e => {
+      //   if (e.nome.toLowerCase().includes(text.toLowerCase())) {
+      //     a.push(e);
+      //   }
+      // });
 
       a.push(
         ...resenhas.filter(e =>
@@ -39,6 +48,7 @@ export default ({navigation}) => {
   };
 
   const routeReview = item => {
+    //console.log(item);
     navigation.dispatch(
       CommonActions.navigate({
         name: 'Resenha',
@@ -54,7 +64,7 @@ export default ({navigation}) => {
         params: {
           resenha: {
             nome: '',
-            descricao: '',
+            texto: '',
             latitude: '',
             longitude: '',
           },

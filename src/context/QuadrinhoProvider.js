@@ -50,13 +50,13 @@ export const QuadrinhoProvider = ({children}) => {
           autor: quadrinho.autor,
           sinopse: quadrinho.sinopse,
           preco: quadrinho.preco,
-          urlFoto: quadrinho.urlFoto,
+          capa: quadrinho.urlFoto,
         },
         {merge: true},
       );
       return true;
     } catch (e) {
-      console.error('QuadrinhoProvider, salvar: ' + e);
+      console.error('quadrinhoProvider, salvar: ' + e);
       return false;
     }
   };
@@ -71,15 +71,11 @@ export const QuadrinhoProvider = ({children}) => {
       'PNG',
       80,
     );
-
     //2. e prepara o path onde ela deve ser salva no storage
-    const pathToStorage = `images/${quadrinho.uid}/foto.png`;
-    console.log(pathToStorage);
+    const pathToStorage = `images/${quadrinho.autor}/${quadrinho.uid}/foto.png`;
 
     //3. Envia para o storage
     let url = ''; //local onde a imagem será salva no Storage
-
-    console.log(storage().ref(pathToStorage));
     const task = storage().ref(pathToStorage).putFile(imageRedimencionada?.uri);
     task.on('state_changed', taskSnapshot => {
       //Para acompanhar o upload, se necessário
@@ -90,13 +86,13 @@ export const QuadrinhoProvider = ({children}) => {
     });
 
     //4. Busca a URL gerada pelo Storage
-    await task.then(async () => {
+    task.then(async () => {
       //se a task finalizar com sucesso, busca a url
       url = await storage().ref(pathToStorage).getDownloadURL();
     });
     //5. Pode dar zebra, então pega a exceção
     task.catch(e => {
-      console.error('QuadrinhoProvider, sendImageToStorage: ' + e);
+      console.error('quadrinhoProvider, sendImageToStorage: ' + e);
       url = null;
     });
     return url;
@@ -108,7 +104,7 @@ export const QuadrinhoProvider = ({children}) => {
       await storage().ref(path).delete();
       return true;
     } catch (e) {
-      console.error('QuadrinhoProvider, del: ', e);
+      console.error('quadrinhoProvider, del: ', e);
       return false;
     }
   };

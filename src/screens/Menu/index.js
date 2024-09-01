@@ -1,12 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useContext} from 'react';
 import {FlatList, Alert} from 'react-native';
-import {AuthenticationContext} from '../../context/AuthUserProvider';
+import {AuthUserContext} from '../../context/AuthUserProvider';
 import {CommonActions} from '@react-navigation/native';
 import {useTheme, ListItem, Icon} from '@rneui/themed';
+import styled from 'styled-components/native';
+import {COLORS} from '../../assets/colors';
+
+const Container = styled.SafeAreaView`
+  flex: 1;
+  padding: 5px;
+  background-color: ${COLORS.secundary};
+`;
 
 export default ({navigation}) => {
-  const {signOut} = useContext(AuthenticationContext);
+  const {signOut} = useContext(AuthUserContext);
   const {theme} = useTheme();
 
   function processar(opcao) {
@@ -37,6 +45,7 @@ export default ({navigation}) => {
   }
 
   return (
+    <Container>
     <FlatList
       data={[
         {key: 1, opcao: 'Perfil', iconName: 'person'},
@@ -47,7 +56,7 @@ export default ({navigation}) => {
           <Icon
             type="ionicon"
             name={item.iconName}
-            color={theme.colors.primary}
+            color={theme.colors.black}
             size={20}
           />
           <ListItem.Content>
@@ -56,7 +65,8 @@ export default ({navigation}) => {
         </ListItem>
       )}
       keyExtractor={item => item.key}
-      style={{margin: 10, marginTop: 20}}
+      style={{margin: 10, marginTop: 20,}}
     />
+    </Container>
   );
 };

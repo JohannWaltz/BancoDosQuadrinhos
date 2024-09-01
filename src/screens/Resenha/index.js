@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Alert, ToastAndroid} from 'react-native';
 import styled from 'styled-components/native';
-import MyButtom from '../../componentes/MeuButtom';
-import OutlineButton from '../../componentes/OutlineButton';
-import Loading from '../../componentes/Loading';
+import MyButtom from '../../components/MyButtom';
+import OutlineButton from '../../components/OutlineButton';
+import Loading from '../../components/Loading';
 import {ResenhaContext} from '../../context/ResenhaProvider';
 import {useTheme, Input, Icon} from '@rneui/themed';
 
@@ -19,19 +19,20 @@ const Scroll = styled.ScrollView``;
 
 export default ({route, navigation}) => {
   const [nome, setNome] = useState('');
-  const [descricao, setDescricoes] = useState('');
+  const [descricao, setDescricao] = useState('');
   const [uid, setUid] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [loading, setLoading] = useState(false);
-  const {saveReview, updateReview, deleteReview} = useContext(ResenhaContext);
+  const {saveReview, updateReview, deleteReview} =
+    useContext(ResenhaContext);
   const {theme} = useTheme();
 
   useEffect(() => {
     if (route.params.resenha) {
       setUid(route.params.resenha.uid);
       setNome(route.params.resenha.nome);
-      setDescricoes(route.params.resenha.descricao);
+      setDescricao(route.params.resenha.descricao);
       setLatitude(route.params.resenha.latitude);
       setLongitude(route.params.resenha.longitude);
     }
@@ -75,7 +76,7 @@ export default ({route, navigation}) => {
   const excluir = async () => {
     Alert.alert(
       'Fique Esperto!',
-      'Você tem certeza que deseja excluir a resenha?',
+      'Você tem certeza que deseja excluir o curso?',
       [
         {
           text: 'Não',
@@ -106,7 +107,7 @@ export default ({route, navigation}) => {
     <Scroll>
       <Container>
         <Input
-          placeholder="Nome da Resenha"
+          placeholder="Nome da Review"
           keyboardType="default"
           returnKeyType="go"
           leftIcon={
@@ -121,7 +122,7 @@ export default ({route, navigation}) => {
           value={nome}
         />
         <Input
-          placeholder="Descrição"
+          placeholder="Descricao"
           keyboardType="default"
           returnKeyType="go"
           leftIcon={
@@ -132,7 +133,7 @@ export default ({route, navigation}) => {
               color={theme.colors.grey2}
             />
           }
-          onChangeText={t => setDescricoes(t)}
+          onChangeText={t => setDescricao(t)}
           value={descricao}
         />
         <Input
@@ -142,8 +143,8 @@ export default ({route, navigation}) => {
           returnKeyType="go"
           leftIcon={
             <Icon
-              type="ionicon"
-              name="location-outline"
+              type="material-community"
+              name="map-marker-check-outline"
               size={22}
               color={theme.colors.grey2}
             />
@@ -158,8 +159,8 @@ export default ({route, navigation}) => {
           returnKeyType="go"
           leftIcon={
             <Icon
-              type="ionicon"
-              name="location-outline"
+              type="material-community"
+              name="map-marker-check-outline"
               size={22}
               color={theme.colors.grey2}
             />
@@ -167,10 +168,10 @@ export default ({route, navigation}) => {
           onChangeText={t => setLongitude(t)}
           value={longitude}
         />
-        <MyButtom texto="Salvar" aoClicar={salvar} />
-        {uid ? <OutlineButton texto="Excluir" onClick={excluir} /> : null}
+        <MyButtom text="Salvar" onClick={salvar} />
+        {uid ? <OutlineButton text="Excluir" onClick={excluir} /> : null}
         <OutlineButton
-          texto="Obter Coordenadas no Mapa"
+          text="Obter Coordenadas no Mapa"
           onClick={() =>
             navigation.navigate('ResenhasMap', {
               resenha: {

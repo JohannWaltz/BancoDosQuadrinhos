@@ -12,10 +12,13 @@ export default ({texto, onClick}) => {
     },
     button: {
       backgroundColor: theme.colors.transparent,
-      borderColor: theme.colors.primary,
+      borderColor:
+        theme.mode === 'light' ? theme.colors.black : theme.colors.black,
       borderWidth: 1,
     },
-    title: {color: theme.colors.primary},
+    title: {
+      color: theme.mode === 'light' ? theme.colors.black : theme.colors.black,
+    },
   });
 
   return (

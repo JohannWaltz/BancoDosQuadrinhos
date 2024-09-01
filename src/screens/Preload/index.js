@@ -1,12 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useEffect} from 'react';
-import {Container, Image} from './styles';
 import {CommonActions} from '@react-navigation/native';
-import {AuthenticationContext} from '../../context/AuthUserProvider';
+import {AuthUserContext} from '../../context/AuthUserProvider';
+import styled from 'styled-components/native';
+import {COLORS} from '../../assets/colors';
+
+export const Container = styled.SafeAreaView`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: ${COLORS.secundary};
+`;
+
+export const Image = styled.Image`
+  width: 150px;
+  height: 150px;
+`;
 
 const Preload = ({navigation}) => {
-  const {retrieveUserSession, signIn} = useContext(AuthenticationContext);
+  const {retrieveUserSession, signIn} = useContext(AuthUserContext);
 
-  async function entrar() {
+  const entrar = async () => {
     const userSession = await retrieveUserSession();
 
     if (
@@ -27,15 +41,23 @@ const Preload = ({navigation}) => {
         }),
       );
     }
-  }
+  };
 
   useEffect(() => {
     entrar();
   }, []);
+
   return (
     <Container>
       <Image
-        source={require('../../assets/images/logo.svg')}
+        containerStyle={{
+        width: 300,
+        height: 300,
+        // borderRadius: 300 / 2,
+        marginBottom: 40,
+        }}
+        style={{width: 305, height: 200}}
+        source={require('../../assets/images/logo.png')}
         accessibilityLabel="logo do app"
       />
     </Container>

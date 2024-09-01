@@ -1,12 +1,13 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {Alert, ToastAndroid} from 'react-native';
 import styled from 'styled-components/native';
-import MyButton from '../../componentes/MeuButtom';
-import Loading from '../../componentes/Loading';
-import DeleteButton from '../../componentes/OutlineButton';
+import MyButton from '../../components/MyButtom';
+import Loading from '../../components/Loading';
+import DeleteButton from '../../components/OutlineButton';
 import {QuadrinhoContext} from '../../context/QuadrinhoProvider';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useTheme, Image, ButtonGroup, Input, Icon} from '@rneui/themed';
+import {COLORS} from '../../assets/colors';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -14,9 +15,12 @@ const Container = styled.SafeAreaView`
   align-items: center;
   padding: 5px;
   padding-top: 20px;
+  background-color: ${COLORS.secundary};
 `;
 
-const Scroll = styled.ScrollView``;
+const Scroll = styled.ScrollView`
+  background-color: ${COLORS.secundary};
+`;
 
 export default ({route, navigation}) => {
   const [nome, setNome] = useState('');
@@ -64,12 +68,13 @@ export default ({route, navigation}) => {
       setAutor('');
       navigation.goBack();
     } else {
+      console.log();
       ToastAndroid.show('Ops!Deu problema ao salvar.', ToastAndroid.LONG);
     }
     setLoading(false);
   };
 
-  async function excluir() {
+  const excluir = async () => {
     Alert.alert(
       'Opa! Fique esperto.',
       'Você tem certeza que deseja excluir o quadrinho?',
@@ -83,7 +88,7 @@ export default ({route, navigation}) => {
           text: 'Sim',
           onPress: async () => {
             setLoading(true);
-            const pathStorageToDelete = `images/${nome}/foto.png`;
+            const pathStorageToDelete = `images/${autor}/${nome}/foto.png`;
             if (await del(uid, pathStorageToDelete)) {
               ToastAndroid.show(
                 'Ordem dada é ordem cumprida',
@@ -98,12 +103,12 @@ export default ({route, navigation}) => {
         },
       ],
     );
-  }
+  };
 
   const buscaNaGaleria = () => {
     const options = {
       storageOptions: {
-        title: 'Selecionar  uma imagem',
+        title: 'Selecionar uma imagem',
         skipBackup: true,
         path: 'images',
         mediaType: 'photo',
@@ -178,6 +183,19 @@ export default ({route, navigation}) => {
         <ButtonGroup
           buttons={['Buscar na Galeria', 'Tira Foto']}
           onPress={v => buscarImagemNoDevice(v)}
+          containerStyle={{
+            borderColor:
+              theme.mode === 'light'
+                ? theme.colors.black
+                : theme.colors.primary,
+            backgroundColor: theme.colors.white,
+          }}
+          textStyle={{
+            color:
+              theme.mode === 'light'
+                ? theme.colors.black
+                : theme.colors.primary,
+          }}
         />
         <Input
           placeholder="Nome"
@@ -186,7 +204,7 @@ export default ({route, navigation}) => {
           leftIcon={
             <Icon
               type="ionicon"
-              name="person-outline"
+              name="book"
               size={22}
               color={theme.colors.grey2}
             />
@@ -201,7 +219,7 @@ export default ({route, navigation}) => {
           leftIcon={
             <Icon
               type="ionicon"
-              name="rocket-outline"
+              name="person-outline"
               size={22}
               color={theme.colors.grey2}
             />
@@ -226,7 +244,7 @@ export default ({route, navigation}) => {
         />
         <Input
           placeholder="Preço"
-          keyboardType="default"
+          keyboardType="numeric"
           returnKeyType="go"
           leftIcon={
             <Icon
@@ -240,8 +258,8 @@ export default ({route, navigation}) => {
           value={preco}
         />
         <MyButton
-          texto="Salvar"
-          aoClicar={() => {
+          text="Salvar"
+          onClick={() => {
             salvar();
           }}
         />

@@ -1,32 +1,88 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useContext, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  TextInput,
-  Alert,
-} from 'react-native';
-import {COLORS} from '../../assets/colors';
-import MeuButtom from '../../componentes/MeuButtom';
-import Loading from '../../componentes/Loading';
+import {ScrollView, View, StyleSheet, Alert} from 'react-native';
+import MyButtom from '../../components/MyButtom';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {CommonActions} from '@react-navigation/native';
-import {AuthenticationContext} from '../../context/AuthUserProvider';
+import Loading from '../../components/Loading';
+import {AuthUserContext} from '../../context/AuthUserProvider';
+import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
-const SignIn = ({navigation}) => {
+export default ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const {storeUserSession, signIn} = useContext(AuthenticationContext);
+  const [showPass, setShowPass] = useState(true);
+  const {signIn} = useContext(AuthUserContext);
+  const {theme} = useTheme();
 
-  async function entrar() {
-    if (email !== '' && password !== '') {
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+      backgroundColor: '#fff3e8',
+    },
+    divSuperior: {
+      flex: 5,
+      alignItems: 'center',
+    },
+    divInferior: {
+      flex: 1,
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    textEsqueceuSenha: {
+      fontSize: 15,
+      color: theme.colors.accentSecundary,
+      alignSelf: 'flex-end',
+      marginTop: 10,
+      marginBottom: 10,
+      marginRight: 13,
+    },
+    divOuHr: {
+      width: '100%',
+      height: 25,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    divHr: {
+      width: '30%',
+      height: 1,
+      borderBottomColor: theme.colors.grey4,
+      borderBottomWidth: 2,
+    },
+    textOu: {
+      marginLeft: 20,
+      marginRight: 20,
+      fontSize: 18,
+      color: theme.colors.grey4,
+    },
+    divCadastrarSe: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    textNormal: {
+      fontSize: 18,
+    },
+    textCadastrarSe: {
+      fontSize: 15,
+      color: theme.colors.accentSecundary,
+      marginLeft: 5,
+    },
+    
+  });
+
+  const entrar = async () => {
+    let msgError = '';
+    if (email && password) {
       setLoading(true);
-      let msg = await signIn(email, password);
-      if (msg === 'ok') {
-        await storeUserSession(email, password);
+      msgError = await signIn(email, password);
+      if (msgError === 'ok') {
         setLoading(false);
         navigation.dispatch(
           CommonActions.reset({
@@ -36,37 +92,64 @@ const SignIn = ({navigation}) => {
         );
       } else {
         setLoading(false);
-        Alert.alert('Erro', msg);
+        Alert.alert('Ops!', msgError);
       }
-    } else {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.divSuperior}>
           <Image
-            style={styles.image}
-            source={require('../../assets/images/logo.svg')}
+            containerStyle={{
+              width: 330,
+              height: 300,
+              borderRadius: 5 / 2,
+              marginBottom: 10,
+            }}
+            style={{width: 305, height: 200}}
+            source={require('../../assets/images/logo.png')}
             accessibilityLabel="logo do app"
           />
-          <TextInput
-            value={email}
-            style={styles.input}
+          <Input
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
+            leftIcon={
+              <Icon
+                name="email-check-outline"
+                type="material-community"
+                size={22}
+                color={theme.colors.grey2}
+              />
+            }
             onChangeText={t => setEmail(t)}
           />
-          <TextInput
-            value={password}
-            style={styles.input}
-            secureTextEntry={true}
+          <Input
+            secureTextEntry={showPass}
             placeholder="Senha"
             keyboardType="default"
             returnKeyType="go"
+            leftIcon={
+              showPass ? (
+                <Icon
+                  type="material-community"
+                  name="form-textbox-password"
+                  size={22}
+                  color={theme.colors.grey2}
+                  onPress={() => setShowPass(false)}
+                />
+              ) : (
+                <Icon
+                  type="material-community"
+                  name="form-textbox-password"
+                  size={22}
+                  color={theme.colors.error}
+                  onPress={() => setShowPass(true)}
+                />
+              )
+            }
             onChangeText={t => setPassword(t)}
           />
           <Text
@@ -74,7 +157,7 @@ const SignIn = ({navigation}) => {
             onPress={() => navigation.navigate('ForgotPassWord')}>
             Esqueceu sua senha?
           </Text>
-          <MeuButtom texto="ENTRAR" aoClicar={entrar} cor={COLORS.accent} />
+          <MyButtom text="ENTRAR" onClick={entrar} />
         </View>
         <View style={styles.divInferior}>
           <View style={styles.divOuHr}>
@@ -83,7 +166,7 @@ const SignIn = ({navigation}) => {
             <View style={styles.divHr} />
           </View>
           <View style={styles.divCadastrarSe}>
-            <Text style={styles.textNormal}>Não tem uma conta?</Text>
+            <Text>Não tem uma conta?</Text>
             <Text
               style={styles.textCadastrarSe}
               onPress={() => navigation.navigate('SignUp')}>
@@ -92,81 +175,7 @@ const SignIn = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
-      {loading && <Loading />}
+      <Loading visivel={loading} />
     </SafeAreaView>
   );
 };
-
-export default SignIn;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  divSuperior: {
-    flex: 5,
-    alignItems: 'center',
-  },
-  divInferior: {
-    flex: 1,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  image: {
-    width: 150,
-    height: 150,
-    margin: 5,
-  },
-  input: {
-    width: '95%',
-    height: 50,
-    borderBottomColor: COLORS.grey,
-    borderBottomWidth: 2,
-    fontSize: 16,
-    paddingLeft: 2,
-    paddingBottom: 1,
-    color: COLORS.black,
-  },
-  textEsqueceuSenha: {
-    fontSize: 15,
-    color: COLORS.accentSecundary,
-    alignSelf: 'flex-end',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  divOuHr: {
-    width: '100%',
-    height: 25,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  divHr: {
-    width: '30%',
-    height: 1,
-    borderBottomColor: COLORS.grey,
-    borderBottomWidth: 2,
-  },
-  textOu: {
-    marginLeft: 20,
-    marginRight: 20,
-    fontSize: 20,
-    color: COLORS.grey,
-  },
-  divCadastrarSe: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  textNormal: {
-    fontSize: 18,
-  },
-  textCadastrarSe: {
-    fontSize: 16,
-    color: COLORS.accentSecundary,
-    marginLeft: 5,
-  },
-});

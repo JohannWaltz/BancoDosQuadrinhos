@@ -3,32 +3,54 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export const AuthenticationContext = createContext({});
+export const AuthUserContext = createContext({});
 
-export const AuthenticationProvider = ({children}) => {
-  const [user, setUser] = useState(null);
+export const AuthUserProvider = ({children}) => {
+  const [user, setUser] = useState(null); //usuário que está na sessão
 
-  async function storeUserSession(email, pass) {
+  /*
+    Cache criptografado do usuário
+  */
+  async function storeUserSession(localEmail, pass) {
     try {
       await EncryptedStorage.setItem(
         'user_session',
         JSON.stringify({
-          email,
+          email: localEmail,
           pass,
         }),
       );
-    } catch (error) {
-      console.error('SignIn, storeUserSession' + error);
+    } catch (e) {
+      console.error('AuthUserProvider, storeUserSession: ' + e);
     }
   }
+
   async function retrieveUserSession() {
     try {
       const session = await EncryptedStorage.getItem('user_session');
       return session !== null ? JSON.parse(session) : null;
     } catch (e) {
-      console.error('Authentication, retrieveUserSession: ' + e);
+      console.error('AuthUserProvider, retrieveUserSession: ' + e);
     }
   }
+
+  /*
+    Funções do processo de Autenticação
+  */
+  async function signUp(localUser, pass) {
+    try {
+      await auth().createUserWithEmailAndPassword(localUser.email, pass);
+      await auth().currentUser.sendEmailVerification();
+      await firestore()
+        .collection('users')
+        .doc(auth().currentUser.uid)
+        .set(localUser);
+      return 'ok';
+    } catch (e) {
+      return launchServerMessageErro(e);
+    }
+  }
+
   async function signIn(email, pass) {
     try {
       await auth().signInWithEmailAndPassword(email, pass);
@@ -46,21 +68,7 @@ export const AuthenticationProvider = ({children}) => {
     }
   }
 
-  async function signUp(localUser, pass) {
-    try {
-      await auth().createUserWithEmailAndPassword(localUser.email, pass);
-      await auth().currentUser.sendEmailVerification();
-      await firestore()
-        .collection('users')
-        .doc(auth().currentUser.uid)
-        .set(localUser);
-      return 'ok';
-    } catch (e) {
-      return launchServerMessageErro(e);
-    }
-  }
-
-  async function forgotPassWord(email) {
+  async function forgotPass(email) {
     try {
       await auth().sendPasswordResetEmail(email);
       return 'ok';
@@ -82,6 +90,7 @@ export const AuthenticationProvider = ({children}) => {
     }
   }
 
+  //busca os detalhes do user no nó users e o armazena no state user
   async function getUser(pass) {
     try {
       let doc = await firestore()
@@ -120,18 +129,17 @@ export const AuthenticationProvider = ({children}) => {
   }
 
   return (
-    <AuthenticationContext.Provider
+    <AuthUserContext.Provider
       value={{
-        storeUserSession,
-        signOut,
-        signIn,
-        signUp,
-        forgotPassWord,
-        retrieveUserSession,
-        getUser,
         user,
+        signUp,
+        signIn,
+        retrieveUserSession,
+        forgotPass,
+        signOut,
+        getUser,
       }}>
       {children}
-    </AuthenticationContext.Provider>
+    </AuthUserContext.Provider>
   );
 };

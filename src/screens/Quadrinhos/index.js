@@ -2,17 +2,20 @@ import React, {useContext, useState} from 'react';
 import styled from 'styled-components/native';
 import {QuadrinhoContext} from '../../context/QuadrinhoProvider';
 import Item from './Item';
-import FloatButtonAdd from '../../componentes/FloatButtonAdd';
-import SearchBar from '../../componentes/SearchBar';
+import FloatButtonAdd from '../../components/FloatButtonAdd';
+import SearchBar from '../../components/SearchBar';
+import {COLORS} from '../../assets/colors';
 
 const Container = styled.SafeAreaView`
   flex: 1;
   padding: 5px;
+  background-color: ${COLORS.secundary};
 `;
 
 const FlatList = styled.FlatList`
   width: 100%;
   height: 100%;
+  background-color: ${COLORS.secundary};
 `;
 
 export default ({navigation}) => {
@@ -22,7 +25,7 @@ export default ({navigation}) => {
   const filterByName = text => {
     if (text !== '') {
       let a = [];
-      // quadrinhos.forEach(e => {
+      // estudantes.forEach(e => {
       //   if (e.nome.toLowerCase().includes(text.toLowerCase())) {
       //     a.push(e);
       //   }
@@ -51,13 +54,13 @@ export default ({navigation}) => {
   return (
     <Container>
       <SearchBar text="Quem você procura?" setSearch={filterByName} />
-      {/* {quadrinhosTemp.length > 0
-            ? quadrinhosTemp.map((v, k) => (
-                <Item item={v} onPress={() => routeComic(v)} key={k} />
-              ))
-            : quadrinhos.map((v, k) => (
-                <Item item={v} onPress={() => routeStudent(v)} key={k} />
-              ))} */}
+      {/* {estudantesTemp.length > 0
+        ? estudantesTemp.map((v, k) => (
+            <Item item={v} onPress={() => routeStudent(v)} key={k} />
+          ))
+        : estudantes.map((v, k) => (
+            <Item item={v} onPress={() => routeStudent(v)} key={k} />
+          ))} */}
       <FlatList
         data={quadrinhosTemp.length > 0 ? quadrinhosTemp : quadrinhos}
         renderItem={({item}) => (
