@@ -18,36 +18,38 @@ export default ({item, onPress}) => {
     title: {
       color:
         theme.mode === 'light' ? theme.colors.black : theme.colors.primaryDark,
+        fontSize: 24,
+        fontWeight: 'bold',
     },
     divider: {
-      width: 260,
+      width: 330,
     },
     div_quadrinho: {
       flexDirection: 'row',
       alignItems: 'center',
     },
     foto: {
-      width: 50,
-      height: 50,
-      marginRight: 20,
+      width: 150,
+      height: 200,
+      marginRight: 10,
+      marginLeft: 10,
       borderRadius: 1 / 2,
     },
     nome: {
       textAlign: 'center',
       color:
         theme.mode === 'light' ? theme.colors.black : theme.colors.primaryDark,
-      fontSize: 18,
-      fontWeight: 'bold',
+      fontSize: 14,
     },
   });
 
   return (
     <Card containerStyle={styles.card}>
-      <Card.Title style={styles.title}>{item.curso}</Card.Title>
+      <Card.Title style={styles.title}>{item.nome}</Card.Title>
       <Card.Divider color={theme.colors.black} style={styles.divider} />
       <View style={styles.div_quadrinho}>
         <Image containerStyle={styles.foto} source={{uri: item.urlFoto}} />
-        <Text style={styles.nome}>{item.nome}</Text>
+        <Text style={styles.nome}>{item.autor}</Text>
       </View>
       <OutlineButton texto={'Detalhar'} onClick={onPress} />
     </Card>

@@ -6,6 +6,7 @@ import OutlineButton from '../../components/OutlineButton';
 import Loading from '../../components/Loading';
 import {ResenhaContext} from '../../context/ResenhaProvider';
 import {useTheme, Input, Icon} from '@rneui/themed';
+import {COLORS} from '../../assets/colors';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -13,9 +14,12 @@ const Container = styled.SafeAreaView`
   align-items: center;
   padding: 5px;
   padding-top: 20px;
+  background-color: ${COLORS.secundary};
 `;
 
-const Scroll = styled.ScrollView``;
+const Scroll = styled.ScrollView`
+background-color: ${COLORS.secundary};
+`;
 
 export default ({route, navigation}) => {
   const [nome, setNome] = useState('');
@@ -76,7 +80,7 @@ export default ({route, navigation}) => {
   const excluir = async () => {
     Alert.alert(
       'Fique Esperto!',
-      'Você tem certeza que deseja excluir o curso?',
+      'Você tem certeza que deseja excluir o local?',
       [
         {
           text: 'Não',
@@ -107,7 +111,7 @@ export default ({route, navigation}) => {
     <Scroll>
       <Container>
         <Input
-          placeholder="Nome da Review"
+          placeholder="Nome do local"
           keyboardType="default"
           returnKeyType="go"
           leftIcon={
@@ -169,9 +173,9 @@ export default ({route, navigation}) => {
           value={longitude}
         />
         <MyButtom text="Salvar" onClick={salvar} />
-        {uid ? <OutlineButton text="Excluir" onClick={excluir} /> : null}
+        {uid ? <OutlineButton texto="Excluir" onClick={excluir} /> : null}
         <OutlineButton
-          text="Obter Coordenadas no Mapa"
+          texto="Obter Coordenadas no Mapa"
           onClick={() =>
             navigation.navigate('ResenhasMap', {
               resenha: {

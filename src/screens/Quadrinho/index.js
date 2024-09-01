@@ -9,6 +9,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useTheme, Image, ButtonGroup, Input, Icon} from '@rneui/themed';
 import {COLORS} from '../../assets/colors';
 
+
 const Container = styled.SafeAreaView`
   flex: 1;
   justify-content: center;
@@ -68,7 +69,6 @@ export default ({route, navigation}) => {
       setAutor('');
       navigation.goBack();
     } else {
-      console.log();
       ToastAndroid.show('Ops!Deu problema ao salvar.', ToastAndroid.LONG);
     }
     setLoading(false);
@@ -88,7 +88,7 @@ export default ({route, navigation}) => {
           text: 'Sim',
           onPress: async () => {
             setLoading(true);
-            const pathStorageToDelete = `images/${autor}/${nome}/foto.png`;
+            const pathStorageToDelete = `images/${uid}/foto.png`;
             if (await del(uid, pathStorageToDelete)) {
               ToastAndroid.show(
                 'Ordem dada é ordem cumprida',

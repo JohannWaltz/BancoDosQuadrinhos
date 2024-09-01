@@ -11,7 +11,6 @@ import SignUp from '../screens/SignUp';
 import Quadrinho from '../screens/Quadrinho';
 import Resenhas from '../screens/Resenhas';
 import Resenha from '../screens/Resenha';
-import Autores from '../screens/Autores';
 import ForgotPassWord from '../screens/ForgotPassword';
 import ResenhasMap from '../screens/ResenhasMap';
 import Menu from '../screens/Menu';
@@ -63,9 +62,9 @@ const AppStack = () => {
       />
       <Tab.Screen
         component={Resenhas}
-        name="Resenhas"
+        name="Local"
         options={{
-          tabBarLabel: 'Resenhas',
+          tabBarLabel: 'Local',
           tabBarIcon: () => (
             <Icon
               type="ionicon"
@@ -89,25 +88,6 @@ const AppStack = () => {
             <Icon
               type="ionicon"
               name="map-sharp"
-              color={
-                theme.mode === 'light'
-                  ? theme.colors.black
-                  : theme.colors.black
-              }
-              size={20}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        component={Autores}
-        name="Autores"
-        options={{
-          tabBarLabel: 'Autores',
-          tabBarIcon: () => (
-            <Icon
-              type="ionicon"
-              name="rocket"
               color={
                 theme.mode === 'light'
                   ? theme.colors.black

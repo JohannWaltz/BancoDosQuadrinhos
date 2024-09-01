@@ -19,7 +19,7 @@ export const ResenhaProvider = ({children}) => {
 
   const getReviews = async () => {
     try {
-      const response = await api.get('/reviews');
+      const response = await api.get('/resenhas');
       //console.log('Dados buscados via API');
       //console.log(response.data);
       //console.log(response.data.documents);
